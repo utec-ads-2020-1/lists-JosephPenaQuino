@@ -5,7 +5,7 @@
 #include "iterators/bidirectional_iterator.h"
 
 // TODO: Implement all methods
-template <typename T>
+template <class T>
 class LinkedList : public List<T> {
     public:
         LinkedList() : List<T>() {}
@@ -42,5 +42,93 @@ class LinkedList : public List<T> {
         */
         void merge(LinkedList<T>&);
 };
+template <class T>
+T LinkedList<T>::front()
+{
 
+}
+
+template <class T>
+T LinkedList<T>::back()
+{
+    
+}
+
+template <class T>
+void LinkedList<T>::push_front(T)
+{
+
+}
+
+template <class T>
+void LinkedList<T>::push_back(T)
+{
+
+}
+
+template <class T>
+void LinkedList<T>::pop_front()
+{
+
+}
+
+template <class T>
+void LinkedList<T>::pop_back()
+{
+
+}
+
+template <class T>
+T LinkedList<T>::operator[](int)
+{
+
+}
+
+template <class T>
+bool LinkedList<T>::empty()
+{
+
+}
+
+template <class T>
+int LinkedList<T>::size()
+{
+
+}
+
+template <class T>
+void LinkedList<T>::clear()
+{
+
+}
+
+template <class T>
+void LinkedList<T>::sort()
+{
+
+}
+
+template <class T>
+void LinkedList<T>::reverse()
+{
+
+}
+
+template <class T>
+BidirectionalIterator<T> LinkedList<T>::begin()
+{
+
+}
+
+template <class T>
+BidirectionalIterator<T> LinkedList<T>::end()
+{
+
+}
+
+template <class T>
+void LinkedList<T>::merge(LinkedList<T>&)
+{
+    
+}
 #endif

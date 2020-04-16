@@ -5,7 +5,7 @@
 #include "iterators/bidirectional_iterator.h"
 
 // TODO: Implement all methods
-template <typename T>
+template <class T>
 class CircularLinkedList : public List<T> {
     public:
         CircularLinkedList() : List<T>() {}
@@ -42,5 +42,93 @@ class CircularLinkedList : public List<T> {
         */
         void merge(CircularLinkedList<T>&);
 };
+template <class T>
+T CircularLinkedList<T>::front()
+{
 
+}
+
+template <typename T>
+T CircularLinkedList<T>::back()
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::push_front(T)
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::push_back(T)
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::pop_front()
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::pop_back()
+{
+
+}
+
+template <typename T>
+T CircularLinkedList<T>::operator[](int)
+{
+
+}
+
+template <typename T>
+bool CircularLinkedList<T>::empty()
+{
+
+}
+
+template <typename T>
+int CircularLinkedList<T>::size()
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::clear()
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::sort()
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::reverse()
+{
+
+}
+
+template <typename T>
+BidirectionalIterator<T> CircularLinkedList<T>::begin()
+{
+
+}
+
+template <typename T>
+BidirectionalIterator<T> CircularLinkedList<T>::end()
+{
+
+}
+
+template <typename T>
+void CircularLinkedList<T>::merge(CircularLinkedList<T>&)
+{
+    
+}
 #endif

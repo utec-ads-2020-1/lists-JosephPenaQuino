@@ -4,7 +4,7 @@
 #include "../node.h"
 
 // TODO: Implement all methods
-template <typename T> 
+template <class T> 
 class BidirectionalIterator {
     private:
         Node<T> *current;
@@ -23,5 +23,46 @@ class BidirectionalIterator {
 
         T operator*();
 };
+template <class T> 
+BidirectionalIterator<T>::BidirectionalIterator()
+{
+
+}
+
+template <class T> 
+BidirectionalIterator<T>::BidirectionalIterator(Node<T>*)
+{
+
+}
+
+template <class T> 
+BidirectionalIterator<T> BidirectionalIterator<T>::operator=(BidirectionalIterator<T>)
+{
+
+}
+
+template <class T> 
+bool BidirectionalIterator<T>::operator!=(BidirectionalIterator<T>)
+{
+
+}
+
+template <class T> 
+BidirectionalIterator<T> BidirectionalIterator<T>::operator++()
+{
+
+}
+
+template <class T> 
+BidirectionalIterator<T> BidirectionalIterator<T>::operator--()
+{
+
+}
+
+template <class T> 
+T BidirectionalIterator<T>::operator*()
+{
+    
+}
 
 #endif
