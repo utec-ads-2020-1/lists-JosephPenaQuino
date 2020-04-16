@@ -5,6 +5,26 @@
         "array": "cpp",
         "deque": "cpp",
         "vector": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "atomic": "cpp",
+        "*.tcc": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp",
+        "optional": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "limits": "cpp",
+        "type_traits": "cpp"
     }
 }
