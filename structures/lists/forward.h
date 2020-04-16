@@ -8,8 +8,9 @@
 template <typename T>
 class ForwardList : public List<T> {
     private:
-        void merge_sort(Node<T> *n, int l, int r);
-        void merge_s(Node<T> *n, int l, int m, int r);
+        void divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b);
+        void merge_sort(Node<T> **n);
+        Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
         ForwardList();
 
@@ -156,40 +157,83 @@ int ForwardList<T>::size()
 template <class T>
 void ForwardList<T>::clear()
 {
-
-}
-
-template <typename T>
-void ForwardList<T>::merge_sort(Node<T> *n, int l, int r)
-{
-    if (l < r)
+    Node<T> *temp;
+    while(this->head != nullptr)
     {
-        int m = l+(r-l)/2;
-
-        merge_sort(n, l, m);
-        merge_sort(n, m+1, r);
-
-        merge_s(n, l, m, r);
+        temp = this->head;
+        this->head = this->head->next;
+        delete temp;
+        this->nodes--;
     }
+    this->tail = nullptr;
 }
 
 template <typename T>
-void ForwardList<T>::merge_s(Node<T> *n, int l, int m, int r)
+void ForwardList<T>::merge_sort(Node<T> **n)
 {
-    int i, j, k;
-    int n1 = m-l+1;
-    int n2 = r-m;
+    Node<T> *head = *n;
+    if (head == nullptr || head->next == nullptr)
+        return;
 
-    int L[n1], R[n2];
-    for (i=0; i < n1; ++i)
-        L[i] = 
+    Node<T> *a, *b;
+    divide_fordward_list(*n, &a, &b);
+
+    this->merge_sort(&a); 
+    this->merge_sort(&b);
+
+    *n = merge_s(a, b);
+}
+
+template<typename T>
+void ForwardList<T>::divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b)
+{
+    Node<T> *fast, *slow; 
+    slow = n; 
+    fast = n->next; 
+
+    while (fast != NULL)
+    { 
+        fast = fast->next; 
+        if (fast != NULL)
+        { 
+            slow = slow->next; 
+            fast = fast->next; 
+        } 
+    } 
+
+    *a = n; 
+    *b = slow->next; 
+    slow->next = NULL; 
+}
+
+template <typename T>
+Node<T> * ForwardList<T>::merge_s(Node<T> *a, Node<T> *b)
+{
+    Node<T> *res = nullptr;
+
+    if (a == NULL)
+        return (b); 
+    else if (b == NULL) 
+        return (a); 
+
+    if (a->data <= b->data)
+    { 
+    res = a; 
+    res->next = merge_s(a->next, b); 
+    } 
+    else
+    { 
+    res = b; 
+    res->next = merge_s(a, b->next); 
+    } 
+    return res; 
 }
 template <class T>
 void ForwardList<T>::sort()
 {
     if (this->empty())
         return;
-    this->merge_sort(this->head, 0, nodes);
+    this->merge_sort(&(this->head));
 }
 
 template <class T>
@@ -207,9 +251,9 @@ void ForwardList<T>::reverse()
         this->pop_back();
 }
 template <class T>
-void ForwardList<T>::merge(ForwardList<T>&)
+void ForwardList<T>::merge(ForwardList<T>& other)
 {
-
+    
 }
 template <class T>
 ForwardIterator<T> ForwardList<T>::begin()
