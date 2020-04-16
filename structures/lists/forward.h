@@ -26,6 +26,7 @@ class ForwardList : public List<T> {
         void clear();
         void sort();
         void reverse();
+        void insert(int, T);
 
         ForwardIterator<T> begin();
 	    ForwardIterator<T> end();
@@ -250,10 +251,34 @@ void ForwardList<T>::reverse()
     for (int i=0; i < my_size; ++i)
         this->pop_back();
 }
+
+template <class T>
+void ForwardList<T>::insert(int index, T data)
+{
+    if (this->empty())
+        return;
+    if (index > this->nodes)
+        return;
+    else if (index==0)
+        this->push_front(data);
+    else if (index==this->nodes)
+        this->push_back(data);
+    else
+    {
+        Node<T> ** temp = &(this->head->next);
+        for (int i=0; i < index; ++i)
+            (*temp) = (*temp)->next;
+        
+        Node<T> * new_node = new Node<T>(data);
+        new_node->next=(*temp)->next;
+        (*temp)->next = new_node;
+    }
+
+}
+
 template <class T>
 void ForwardList<T>::merge(ForwardList<T>& other)
 {
-    
 }
 template <class T>
 ForwardIterator<T> ForwardList<T>::begin()
