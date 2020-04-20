@@ -7,10 +7,9 @@ using namespace std;
 
 #define MAX 1000 
 
-// TODO: Implement all methods
 template <class T>
 class stack {
-	Node<T>* data;
+	T* data;
 	int capacity;
 	int _size;
 
@@ -29,54 +28,40 @@ public:
 };
 
 template <class T>
-stack<T>::stack(int size) : _size{0}, capacity{size}, data{nullptr} {}
+stack<T>::stack(int size) : _size{0}, capacity{size}, data{nullptr}
+{
+	data = new T[capacity];
+}
 
 template <class T>
-stack<T>::stack(const stack<T> & other) :  _size{0}, capacity{other.capacity}, data{nullptr}
+stack<T>::stack(const stack<T> & other) :  _size{other._size}, capacity{other.capacity}, data{nullptr}
 {
-	// TODO: Implement reverse function
 	if (this != &other)
 	{
-		for (int j=0; j < other._size;++j)
-		{
-			Node<T>* temp = other.data;
-			for (int i=0;i < other._size-j;++i)
-			{
-				if (i== other._size-j-1)
-					this->push(temp->data);
-				temp=temp->next;
-			}
-		}
+		this->data = new T[capacity];
+		std::copy(other.data, other.data + other.capacity, data);
 	}
 }
 
 template <class T>
 stack<T>::~stack()
 {
-
+	delete [] data;
 }
 
 template <class T>
 T stack<T>::pop()
 {
 	if (this->empty())
-		// TODO: Implement assert
-		return T();
-	
-	Node<T> * temp_node = data->next;
-	delete data;
-	data = temp_node;
-	this->_size--;
-	if (this->empty())
-		// TODO: Implement assert
-		return T();
-	return this->top();
+		throw out_of_range("The queue is empty!!!");
+	_size--;
+	return data[_size];
 }
 
 template <class T>
 T stack<T>::top()
 {
-	return data->data;
+	return data[_size-1];
 }
 
 template <class T>
@@ -94,15 +79,15 @@ bool stack<T>::empty()
 template <typename T>
 void stack<T>::push(T element)
 {
-	if (this->empty())
+	if (_size >= capacity)
 	{
-		this->data = new Node<T>(element);
+		T * new_container = new T[capacity*2];
+		std::copy(data, data + capacity, new_container);
+		capacity = capacity*2;
+		delete[] data;
+		data = new_container;
 	}
-	else
-	{
-		Node<T> * new_node = new Node<T>(element, this->data);
-		this->data = new_node;
-	}
+	data[_size] = element;
 	this->_size++;
 }
 
