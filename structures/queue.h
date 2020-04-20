@@ -1,25 +1,29 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include <algorithm>
+#include <iterator>
+
 using namespace std;
 
 #define MAX 1000 
 
-// TODO: Implement all methods
 template <typename T>
-class queue {
+class queue
+{
+	private:
 	T* data;
 	T top;
 	int _size;
 	int capacity;
 
-public:
+	public:
 	queue(int size = MAX);
 	queue(const queue<T> &);
 	~queue();   		
 
 	void push(T);
-	T pop();
+	void pop();
 	T front();
     T back();
 
@@ -53,29 +57,34 @@ queue<T>::~queue()
 template <class T>
 void queue<T>::push(T element)
 {
-	if (_size != capacity)
-		data[_size] = element;
-		this->_size++;
+	if (_size >= capacity)
+	{
+		T * new_container = new T[capacity*2];
+		std::copy(data, data + capacity, new_container);
+		capacity = capacity*2;
+		delete[] data;
+		data = new_container;
+	}
+	data[_size] = element;
+	this->_size++;
+	
 }
 
 template <class T>
-T queue<T>::pop()
+void queue<T>::pop()
 {
 	if (this->empty())
-		return T();
+		throw out_of_range("The queue is empty!!!");
 	this->_size--;
 	for (int i=0;i < _size; ++i)
 		data[i] = data[i+1];
-	if (this->empty())
-		return T();
-	return data[0];
 }
 
 template <class T>
 T queue<T>::front()
 {
 	if (this->empty())
-		return T();
+		throw out_of_range("The queue is empty!!!");
 	return data[0];
 }
 
@@ -83,7 +92,7 @@ template <class T>
 T queue<T>::back()
 {
 	if (this->empty())
-		return T();
+		throw out_of_range("The queue is empty!!!");
 	return data[_size-1];
 }
 
