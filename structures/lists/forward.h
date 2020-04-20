@@ -6,7 +6,8 @@
 
 // TODO: Implement all methods
 template <typename T>
-class ForwardList : public List<T> {
+class ForwardList : public List<T>
+{
     private:
         void divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b);
         void merge_sort(Node<T> **n);
@@ -279,6 +280,7 @@ void ForwardList<T>::insert(int index, T data)
 template <class T>
 void ForwardList<T>::merge(ForwardList<T>& other)
 {
+    // for (int i=0; i < other.nodes)
 }
 template <class T>
 ForwardIterator<T> ForwardList<T>::begin()
