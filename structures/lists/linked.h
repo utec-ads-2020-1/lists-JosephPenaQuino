@@ -4,9 +4,17 @@
 #include "list.h"
 #include "iterators/bidirectional_iterator.h"
 
-// TODO: Implement all methods
+// TODO: 
+//  - Destructor
+//  - More eficcient []
+
 template <class T>
-class LinkedList : public List<T> {
+class LinkedList : public List<T>
+{
+    private:
+        void divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b);
+        void merge_sort(Node<T> **n);
+        Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
         LinkedList() : List<T>() {}
 
@@ -45,73 +53,199 @@ class LinkedList : public List<T> {
 template <class T>
 T LinkedList<T>::front()
 {
-
+    if (this->empty())
+        throw out_of_range("The double linked list is empty!!");
+    
+    return this->head->data;
 }
 
 template <class T>
 T LinkedList<T>::back()
 {
+    if (this->empty())
+        throw out_of_range("The double linked list is empty!!!");
     
+    return this->tail->data;
 }
 
 template <class T>
-void LinkedList<T>::push_front(T)
+void LinkedList<T>::push_front(T data)
 {
-
+    Node<T> * temp = new Node<T>(data);
+    if (this->empty())
+        this->tail  = this->head = temp;
+    else
+    {
+        temp->next = this->head;
+        this->head->prev = temp;
+        this->head = temp;
+    }
+    this->nodes++;
 }
 
 template <class T>
-void LinkedList<T>::push_back(T)
+void LinkedList<T>::push_back(T data)
 {
-
+    Node<T> * temp = new Node<T>(data);
+    if (this->empty())
+        this->tail = this->head  = temp;
+    else
+    {
+        this->tail->next = temp;
+        temp->prev = this->tail;
+        this->tail = temp;
+    }
+    this->nodes++;
 }
 
 template <class T>
 void LinkedList<T>::pop_front()
 {
+    if (this->empty())
+        throw out_of_range("The double linked list is empty!!!!");
 
+    Node<T> * temp = this->head;
+    this->head = this->head->next;
+    delete temp;
+    this->head->prev = nullptr;
+    this->nodes--;
 }
 
 template <class T>
 void LinkedList<T>::pop_back()
 {
+    if (this->empty())
+        throw out_of_range("The double linked list is empty!!!!");
 
+    Node<T> * temp = this->tail;
+    this->tail = this->tail->prev;
+    delete temp;
+    this->tail->next = nullptr;
+    this->nodes--;
 }
 
 template <class T>
-T LinkedList<T>::operator[](int)
+T LinkedList<T>::operator[](int index)
 {
-
+    if (this->empty())
+        throw out_of_range("The double linked list is empty!");
+    if (index < 0 || index >= this->nodes)
+        throw out_of_range("The position is invalid!");
+    
+    Node<T> * temp = this->head;
+    for (int i = 0; i< index; ++i)
+        temp = temp->next;
+    
+    return temp->data;
 }
-
 template <class T>
 bool LinkedList<T>::empty()
 {
-
+    return this->nodes == 0;
 }
 
 template <class T>
 int LinkedList<T>::size()
 {
-
+    return this->nodes;
 }
 
 template <class T>
 void LinkedList<T>::clear()
 {
+    Node<T> *temp;
+    while(this->head != nullptr)
+    {
+        temp = this->head;
+        this->head = this->head->next;
+        delete temp;
+        this->nodes--;
+    }
+    this->tail = nullptr;
+}
 
+template <typename T>
+void LinkedList<T>::merge_sort(Node<T> **n)
+{
+    Node<T> *head = *n;
+    if (head == nullptr || head->next == nullptr)
+        return;
+
+    Node<T> *a, *b;
+    divide_fordward_list(*n, &a, &b);
+
+    this->merge_sort(&a); 
+    this->merge_sort(&b);
+
+    *n = merge_s(a, b);
+}
+
+template<typename T>
+void LinkedList<T>::divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b)
+{
+    Node<T> *fast, *slow; 
+    slow = n; 
+    fast = n->next; 
+
+    while (fast != NULL)
+    { 
+        fast = fast->next; 
+        if (fast != NULL)
+        { 
+            slow = slow->next; 
+            fast = fast->next; 
+        } 
+    } 
+
+    *a = n; 
+    *b = slow->next; 
+    slow->next = NULL; 
+}
+
+template <typename T>
+Node<T> * LinkedList<T>::merge_s(Node<T> *a, Node<T> *b)
+{
+    Node<T> *res = nullptr;
+
+    if (a == NULL)
+        return (b); 
+    else if (b == NULL) 
+        return (a); 
+
+    if (a->data <= b->data)
+    { 
+    res = a; 
+    res->next = merge_s(a->next, b); 
+    } 
+    else
+    { 
+    res = b; 
+    res->next = merge_s(a, b->next); 
+    } 
+    return res; 
 }
 
 template <class T>
 void LinkedList<T>::sort()
 {
-
+    if (this->empty())
+        return;
+    this->merge_sort(&(this->head));
 }
 
 template <class T>
 void LinkedList<T>::reverse()
 {
+    int my_size = this->nodes;
+    Node<T> *temp = this->head;
 
+    for (int i=0; i < my_size; ++i)
+    {
+        this->push_front(temp->data);
+        temp = temp->next;
+    }   
+    for (int i=0; i < my_size; ++i)
+        this->pop_back();
 }
 
 template <class T>
