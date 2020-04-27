@@ -11,7 +11,9 @@
 template <class T>
 class CircularLinkedList : public List<T> {
     private:
-        void divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b);
+        Node<T>* sentinel;
+
+        void divide_circular_list(Node<T> *n, Node<T> **a, Node<T> **b);
         void merge_sort(Node<T> **n);
         Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
@@ -29,6 +31,7 @@ class CircularLinkedList : public List<T> {
         void clear();
         void sort();
         void reverse();
+        void insert_after(BidirectionalIterator<T>, T);
 
         BidirectionalIterator<T> begin();
 	    BidirectionalIterator<T> end();
@@ -49,6 +52,21 @@ class CircularLinkedList : public List<T> {
         */
         void merge(CircularLinkedList<T>&);
 };
+
+// template <class T>
+// CircularLinkedList<T>::CircularLinkedList() : List<T>() 
+// {
+    
+// }
+
+// template <class T>
+// CircularLinkedList<T>::~CircularLinkedList() 
+// {
+//     this->clear();
+//     delete this->sentinel;
+// }
+
+
 template <class T>
 T CircularLinkedList<T>::front()
 {
@@ -72,12 +90,24 @@ void CircularLinkedList<T>::push_front(T data)
 {
     Node<T> * temp = new Node<T>(data);
     if (this->empty())
+    {
+        this->sentinel = new Node<T>();
         this->tail  = this->head = temp;
+
+        this->tail->next = this->sentinel;
+        this->head->prev = this->sentinel;
+
+        this->sentinel->next = this->head;
+        this->sentinel->prev = this->tail;
+    }
     else
     {
         temp->next = this->head;
-        temp->prev = this->tail;
+        temp->prev = this->sentinel;
+
         this->head->prev = temp;
+        this->sentinel->next = temp;
+
         this->head = temp;
     }
     this->nodes++;
@@ -88,12 +118,24 @@ void CircularLinkedList<T>::push_back(T data)
 {
     Node<T> * temp = new Node<T>(data);
     if (this->empty())
+    {
+        this->sentinel = new Node<T>();
         this->tail = this->head  = temp;
+
+        this->tail->next = this->sentinel;
+        this->head->prev = this->sentinel;
+
+        this->sentinel->next = this->head;
+        this->sentinel->prev = this->tail;
+    }
     else
     {
-        this->tail->next = temp;
         temp->prev = this->tail;
-        temp->next = this->head;
+        temp->next = this->sentinel;
+
+        this->tail->next = temp;
+        this->sentinel->prev = temp;
+
         this->tail = temp;
     }
     this->nodes++;
@@ -103,12 +145,22 @@ template <typename T>
 void CircularLinkedList<T>::pop_front()
 {
     if (this->empty())
-        throw out_of_range("The double linked list is empty!!!!");
-
+        return;
+    else if (this->size() == 1)
+    {
+        delete this->head;
+        this->head = nullptr;
+        this->tail = nullptr;
+        this->sentinel->next = nullptr;
+        this->sentinel->prev = nullptr;
+        this->nodes--;
+        return;
+    }
     Node<T> * temp = this->head;
     this->head = this->head->next;
     delete temp;
-    this->head->prev = this->tail;
+    this->head->prev = this->sentinel;
+    this->sentinel->next = this->head;
     this->nodes--;
 }
 
@@ -116,12 +168,22 @@ template <typename T>
 void CircularLinkedList<T>::pop_back()
 {
     if (this->empty())
-        throw out_of_range("The circular linked list is empty!!!!");
-
+        return;
+    else if(this->size() == 1)
+    {
+        delete this->tail;
+        this->head = nullptr;
+        this->tail = nullptr;
+        this->sentinel->next = nullptr;
+        this->sentinel->prev = nullptr;
+        this->nodes--;
+        return;
+    }
     Node<T> * temp = this->tail;
     this->tail = this->tail->prev;
     delete temp;
-    this->tail->next = this->head;
+    this->tail->next = this->sentinel;
+    this->sentinel->prev = this->tail;
     this->nodes--;
 }
 
@@ -131,7 +193,7 @@ T CircularLinkedList<T>::operator[](int index)
     if (this->empty())
         throw out_of_range("The double linked list is empty!");
     if (index < 0 || index >= this->nodes)
-        throw out_of_range("The position is invalid!");
+        throw out_of_range("The index is invalid!");
     
     Node<T> * temp = this->head;
     for (int i = 0; i< index; ++i)
@@ -155,18 +217,20 @@ int CircularLinkedList<T>::size()
 template <typename T>
 void CircularLinkedList<T>::clear()
 {
-
+    Node<T> *temp;
+    int my_size = this->size();
+    for (int i=0; i < my_size; ++i)
+        this->pop_front();
 }
 
 template <typename T>
 void CircularLinkedList<T>::merge_sort(Node<T> **n)
 {
-    Node<T> *head = *n;
-    if (head == nullptr || head->next == nullptr)
+    if (*n == this->sentinel || (*n)->next == this->sentinel)
         return;
 
     Node<T> *a, *b;
-    divide_fordward_list(*n, &a, &b);
+    divide_circular_list(*n, &a, &b);
 
     this->merge_sort(&a); 
     this->merge_sort(&b);
@@ -175,16 +239,16 @@ void CircularLinkedList<T>::merge_sort(Node<T> **n)
 }
 
 template<typename T>
-void CircularLinkedList<T>::divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b)
+void CircularLinkedList<T>::divide_circular_list(Node<T> *n, Node<T> **a, Node<T> **b)
 {
     Node<T> *fast, *slow; 
     slow = n; 
     fast = n->next; 
 
-    while (fast != NULL)
+    while (fast != this->sentinel)
     { 
         fast = fast->next; 
-        if (fast != NULL)
+        if (fast != this->sentinel)
         { 
             slow = slow->next; 
             fast = fast->next; 
@@ -193,17 +257,17 @@ void CircularLinkedList<T>::divide_fordward_list(Node<T> *n, Node<T> **a, Node<T
 
     *a = n; 
     *b = slow->next; 
-    slow->next = NULL; 
+    slow->next = this->sentinel;
 }
 
 template <typename T>
 Node<T> * CircularLinkedList<T>::merge_s(Node<T> *a, Node<T> *b)
 {
-    Node<T> *res = nullptr;
+    Node<T> *res = this->sentinel;
 
-    if (a == NULL)
+    if (a == this->sentinel)
         return (b); 
-    else if (b == NULL) 
+    else if (b == this->sentinel) 
         return (a); 
 
     if (a->data <= b->data)
@@ -245,18 +309,48 @@ void CircularLinkedList<T>::reverse()
 template <typename T>
 BidirectionalIterator<T> CircularLinkedList<T>::begin()
 {
-
+    return BidirectionalIterator<T>(this->head, this->sentinel);
 }
 
 template <typename T>
 BidirectionalIterator<T> CircularLinkedList<T>::end()
 {
+    return BidirectionalIterator<T>(this->sentinel, this->sentinel);
+}
 
+template <class T>
+void CircularLinkedList<T>::insert_after(BidirectionalIterator<T> it, T data)
+{
+    if (this->empty())
+        return;
+    if (it==this->begin())
+        this->push_front(data);
+    else if (it==this->end())
+        this->push_front(data);
+    else
+    {
+        Node<T> * new_node = new Node<T>(data);
+        new_node->next = it.current->next;
+        new_node->prev = it.current;
+        it.current->next->prev = new_node;
+        it.current->next = new_node;
+    }
 }
 
 template <typename T>
-void CircularLinkedList<T>::merge(CircularLinkedList<T>&)
+void CircularLinkedList<T>::merge(CircularLinkedList<T>& other)
 {
-    
+    BidirectionalIterator<T> it = this->begin();
+
+    while (!other.empty())
+    {
+        if (it == nullptr)
+            this->push_back(other.front());
+        else if (*it < other.front())
+            this->insert_after(it, other.front());
+        else if (*it >= other.front())
+            ++it;
+        other.pop_front();
+    }
 }
 #endif
