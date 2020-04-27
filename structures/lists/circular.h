@@ -5,7 +5,6 @@
 #include "iterators/bidirectional_iterator.h"
 
 // TODO: 
-//  - Destructor
 //  - More eficcient []
 
 template <class T>
@@ -18,6 +17,7 @@ class CircularLinkedList : public List<T> {
         Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
         CircularLinkedList() : List<T>() {}
+        ~CircularLinkedList();
 
         T front();
         T back();
@@ -53,18 +53,12 @@ class CircularLinkedList : public List<T> {
         void merge(CircularLinkedList<T>&);
 };
 
-// template <class T>
-// CircularLinkedList<T>::CircularLinkedList() : List<T>() 
-// {
-    
-// }
-
-// template <class T>
-// CircularLinkedList<T>::~CircularLinkedList() 
-// {
-//     this->clear();
-//     delete this->sentinel;
-// }
+template <class T>
+CircularLinkedList<T>::~CircularLinkedList() 
+{
+    this->clear();
+    delete this->sentinel;
+}
 
 
 template <class T>

@@ -74,7 +74,7 @@ template <class T>
 void queue<T>::pop()
 {
 	if (this->empty())
-		throw out_of_range("The queue is empty!!!");
+		return;
 	this->_size--;
 	for (int i=0;i < _size; ++i)
 		data[i] = data[i+1];

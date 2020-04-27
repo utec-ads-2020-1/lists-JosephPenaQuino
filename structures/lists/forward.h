@@ -13,6 +13,7 @@ class ForwardList : public List<T>
         Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
         ForwardList();
+        ~ForwardList();
 
         T front();
         T back();
@@ -51,6 +52,11 @@ class ForwardList : public List<T>
 
 template <class T>
 ForwardList<T>::ForwardList() : List<T>() {}
+template <class T>
+ForwardList<T>::~ForwardList()
+{
+    this->clear();
+}
 
 template <class T>
 T ForwardList<T>::front()

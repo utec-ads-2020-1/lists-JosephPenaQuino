@@ -5,7 +5,6 @@
 #include "iterators/bidirectional_iterator.h"
 
 // TODO: 
-//  - Destructor
 //  - More eficcient []
 
 template <class T>
@@ -17,6 +16,7 @@ class LinkedList : public List<T>
         Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
         LinkedList() : List<T>() {}
+        ~LinkedList();
 
         T front();
         T back();
@@ -51,6 +51,12 @@ class LinkedList : public List<T>
         */
         void merge(LinkedList<T>&);
 };
+template <class T>
+LinkedList<T>::~LinkedList()
+{
+    this->clear();
+}
+
 template <class T>
 T LinkedList<T>::front()
 {
@@ -98,13 +104,13 @@ void LinkedList<T>::push_back(T data)
     }
     this->nodes++;
 }
-// TODO: Fix this
+
 template <class T>
 void LinkedList<T>::pop_front()
 {
     if (this->empty())
         return;
-    if (this->size() ==1)
+    else if (this->size() ==1)
     {
         delete this->head;
         this->head = nullptr;
@@ -118,13 +124,20 @@ void LinkedList<T>::pop_front()
     this->head->prev = nullptr;
     this->nodes--;
 }
-// Fix this
+
 template <class T>
 void LinkedList<T>::pop_back()
 {
     if (this->empty())
-        throw out_of_range("The double linked list is empty!!!!");
-
+        return;
+    else if (this->size() ==1)
+    {
+        delete this->head;
+        this->head = nullptr;
+        this->tail = nullptr;
+        this->nodes--;
+        return;
+    }
     Node<T> * temp = this->tail;
     this->tail = this->tail->prev;
     delete temp;
@@ -292,15 +305,6 @@ void LinkedList<T>::merge(LinkedList<T>& other)
 {
     BidirectionalIterator<T> it = this->begin();
 
-    // if (it == nullptr)
-    // {
-    //     while(!other.empty())
-    //     {
-    //         this->push_back(other.front());
-    //         other.pop_front();
-    //     }
-    // }
-    // bool pass=false;
     while (!other.empty())
     {
         if (it == nullptr)
