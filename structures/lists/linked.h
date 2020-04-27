@@ -12,7 +12,7 @@ template <class T>
 class LinkedList : public List<T>
 {
     private:
-        void divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b);
+        void divide_linked_list(Node<T> *n, Node<T> **a, Node<T> **b);
         void merge_sort(Node<T> **n);
         Node<T> * merge_s(Node<T> *a, Node<T> *b);
     public:
@@ -30,6 +30,7 @@ class LinkedList : public List<T>
         void clear();
         void sort();
         void reverse();
+        void insert_after(BidirectionalIterator<T>, T);
 
         BidirectionalIterator<T> begin();
 	    BidirectionalIterator<T> end();
@@ -97,20 +98,27 @@ void LinkedList<T>::push_back(T data)
     }
     this->nodes++;
 }
-
+// TODO: Fix this
 template <class T>
 void LinkedList<T>::pop_front()
 {
     if (this->empty())
-        throw out_of_range("The double linked list is empty!!!!");
-
+        return;
+    if (this->size() ==1)
+    {
+        delete this->head;
+        this->head = nullptr;
+        this->tail = nullptr;
+        this->nodes--;
+        return;
+    }
     Node<T> * temp = this->head;
     this->head = this->head->next;
     delete temp;
     this->head->prev = nullptr;
     this->nodes--;
 }
-
+// Fix this
 template <class T>
 void LinkedList<T>::pop_back()
 {
@@ -172,7 +180,7 @@ void LinkedList<T>::merge_sort(Node<T> **n)
         return;
 
     Node<T> *a, *b;
-    divide_fordward_list(*n, &a, &b);
+    divide_linked_list(*n, &a, &b);
 
     this->merge_sort(&a); 
     this->merge_sort(&b);
@@ -181,7 +189,7 @@ void LinkedList<T>::merge_sort(Node<T> **n)
 }
 
 template<typename T>
-void LinkedList<T>::divide_fordward_list(Node<T> *n, Node<T> **a, Node<T> **b)
+void LinkedList<T>::divide_linked_list(Node<T> *n, Node<T> **a, Node<T> **b)
 {
     Node<T> *fast, *slow; 
     slow = n; 
@@ -251,18 +259,57 @@ void LinkedList<T>::reverse()
 template <class T>
 BidirectionalIterator<T> LinkedList<T>::begin()
 {
-
+    return BidirectionalIterator<T>(this->head);
 }
 
 template <class T>
 BidirectionalIterator<T> LinkedList<T>::end()
 {
-
+    return BidirectionalIterator<T>(nullptr);
 }
 
 template <class T>
-void LinkedList<T>::merge(LinkedList<T>&)
+void LinkedList<T>::insert_after(BidirectionalIterator<T> it, T data)
 {
-    
+    if (this->empty())
+        return;
+    if (it==this->begin())
+        this->push_front(data);
+    else if (it==this->end())
+        this->push_front(data);
+    else
+    {
+        Node<T> * new_node = new Node<T>(data);
+        new_node->next = it.current->next;
+        new_node->prev = it.current;
+        it.current->next->prev = new_node;
+        it.current->next = new_node;
+    }
+}
+
+template <class T>
+void LinkedList<T>::merge(LinkedList<T>& other)
+{
+    BidirectionalIterator<T> it = this->begin();
+
+    // if (it == nullptr)
+    // {
+    //     while(!other.empty())
+    //     {
+    //         this->push_back(other.front());
+    //         other.pop_front();
+    //     }
+    // }
+    // bool pass=false;
+    while (!other.empty())
+    {
+        if (it == nullptr)
+            this->push_back(other.front());
+        else if (*it < other.front())
+            this->insert_after(it, other.front());
+        else if (*it >= other.front())
+            ++it;
+        other.pop_front();
+    }
 }
 #endif
