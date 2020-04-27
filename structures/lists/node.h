@@ -8,6 +8,7 @@ struct Node {
     Node<T>* prev;
 
     void killSelf();
+    Node() : data{T()}, next{nullptr}, prev{nullptr} {}
     Node(T element) : data{element}, next{nullptr}, prev{nullptr} {}
     Node(T element, Node<T>* next) : data{element}, next{next}, prev{nullptr} {}
 };
