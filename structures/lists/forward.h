@@ -4,7 +4,6 @@
 #include "list.h"
 #include "iterators/forward_iterator.h"
 
-// TODO: Implement all methods
 template <typename T>
 class ForwardList : public List<T>
 {
@@ -28,6 +27,7 @@ class ForwardList : public List<T>
         void sort();
         void reverse();
         void insert(int, T);
+        void insert_after(ForwardIterator<T>, T);
 
         ForwardIterator<T> begin();
 	    ForwardIterator<T> end();
@@ -278,20 +278,56 @@ void ForwardList<T>::insert(int index, T data)
 }
 
 template <class T>
+void ForwardList<T>::insert_after(ForwardIterator<T> it, T data)
+{
+    if (this->empty())
+        return;
+    if (it==this->begin())
+        this->push_front(data);
+    else if (it==this->end())
+        this->push_front(data);
+    else
+    {
+        Node<T> * new_node = new Node<T>(data);
+        new_node->next = it.current->next;
+        it.current->next = new_node;
+    }
+}
+
+template <class T>
 void ForwardList<T>::merge(ForwardList<T>& other)
 {
-    // for (int i=0; i < other.nodes)
+    ForwardIterator<T> it = this->begin();
+
+    if (it == nullptr)
+    {
+        while(!other.empty())
+        {
+            this->push_back(other.front());
+            other.pop_front();
+        }
+    }
+    bool pass=false;
+    while (!other.empty())
+    {
+        if (it == nullptr)
+            this->push_back(other.front());
+        else if (*it < other.front())
+            this->insert_after(it, other.front());
+        else if (*it >= other.front())
+            ++it;
+        other.pop_front();
+    }
 }
 template <class T>
 ForwardIterator<T> ForwardList<T>::begin()
 {
-
+    return ForwardIterator<T>(this->head);
 }
 template <class T>
 ForwardIterator<T> ForwardList<T>::end()
 {
-
+    return ForwardIterator<T>(nullptr);
 }
-
 
 #endif
