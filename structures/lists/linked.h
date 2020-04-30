@@ -303,6 +303,7 @@ void LinkedList<T>::insert_after(BidirectionalIterator<T> it, T data)
 template <class T>
 void LinkedList<T>::merge(LinkedList<T>& other)
 {
+    // No es la idea
     BidirectionalIterator<T> it = this->begin();
 
     while (!other.empty())

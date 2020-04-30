@@ -10,7 +10,7 @@ template <class T>
 class BidirectionalIterator {
     private:
         Node<T> *current;
-        Node<T> *sentinel;
+        Node<T> *sentinel; // No es necesario
 
         template<class B> friend class LinkedList;
         template<class C> friend class CircularLinkedList;
@@ -48,7 +48,7 @@ BidirectionalIterator<T> BidirectionalIterator<T>::operator=(BidirectionalIterat
 
 template <class T> 
 bool BidirectionalIterator<T>::operator!=(BidirectionalIterator<T> it)
-{
+{   
     return this->current != it.current;
 }
 
@@ -60,7 +60,7 @@ bool BidirectionalIterator<T>::operator==(BidirectionalIterator<T> it)
 
 template <class T> 
 BidirectionalIterator<T> BidirectionalIterator<T>::operator++()
-{
+{   // si current es null
     current = current->next;
     if ( this->sentinel != nullptr)
         if (current == this->sentinel)
@@ -69,7 +69,7 @@ BidirectionalIterator<T> BidirectionalIterator<T>::operator++()
 
 template <class T> 
 BidirectionalIterator<T> BidirectionalIterator<T>::operator--()
-{
+{   // si current es null
     current = current->prev;
     if ( this->sentinel != nullptr)
         if (current == this->sentinel)
@@ -78,7 +78,7 @@ BidirectionalIterator<T> BidirectionalIterator<T>::operator--()
 
 template <class T> 
 T BidirectionalIterator<T>::operator*()
-{
+{   // si current es null
     return current->data;
 }
 

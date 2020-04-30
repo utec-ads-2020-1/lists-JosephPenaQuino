@@ -71,7 +71,7 @@ template <class T>
 T ForwardList<T>::back()
 {
     if (this->empty())
-        return T();
+        return T(); // ??????
     
     return this->tail->data;
 }
